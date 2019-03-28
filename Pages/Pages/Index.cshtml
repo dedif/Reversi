@@ -1,0 +1,53 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<h1>Welkom bij Reversi!</h1>
+
+<h4>Registreren</h4>
+<div class="text-danger">@Model.RegisterErrorMessage</div>
+<form method="post" asp-page-handler="register">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="PlayerDto.Avatar" class="control-label"></label>
+        <input asp-for="PlayerDto.Avatar" class="form-control" />
+        <span asp-validation-for="PlayerDto.Avatar" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PlayerDto.EmailAddress" class="control-label"></label>
+        <input asp-for="PlayerDto.EmailAddress" class="form-control" />
+        <span asp-validation-for="PlayerDto.EmailAddress" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PlayerDto.PassPhrase" class="control-label"></label>
+        <input asp-for="PlayerDto.PassPhrase" class="form-control" />
+        <span asp-validation-for="PlayerDto.PassPhrase" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Registreren" class="btn btn-primary" />
+    </div>
+</form>
+
+<h4>Inloggen</h4>
+<div class="text-danger">@Model.LoginErrorMessage</div>
+<form method="post" asp-page-handler="login">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="Avatar" class="control-label"></label>
+        <input asp-for="Avatar" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="EmailAddress" class="control-label"></label>
+        <input asp-for="EmailAddress" class="form-control" />
+        <span asp-validation-for="EmailAddress" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="PassPhrase" class="control-label"></label>
+        <input asp-for="PassPhrase" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Inloggen" class="btn btn-primary" />
+    </div>
+</form>

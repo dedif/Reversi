@@ -1,0 +1,205 @@
+<html lang="en">
+<head>
+<link rel="shortcut icon" type="image/png" href="jasmine/lib/jasmine/jasmine_favicon.png">
+<link rel="stylesheet" type="text/css" href="jasmine/lib/jasmine/jasmine.css">
+    <link rel="stylesheet" type="text/css" href="../../src/css/widget.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
+
+    <script type="text/javascript" src="jasmine/lib/jasmine/jasmine.js"></script>
+<script type="text/javascript" src="jasmine/lib/jasmine/jasmine-html.js"></script>
+<script type="text/javascript" src="jasmine/lib/jasmine/boot.js"></script>
+<script type="text/javascript" src="app.js"></script>
+<script type="text/javascript" src="../../node_modules/jquery/dist/jquery.js"></script>
+<script type="text/javascript" src="../../src/js/TemplateModule.js"></script>
+<script type="text/javascript" src="../../src/js/SPA.js"></script>
+<script type="text/javascript" src="../../src/js/Data.js"></script>
+<script type="text/javascript" src="../../src/js/Model.js"></script>
+<script type="text/javascript" src="../../src/js/Reversi.js"></script>
+    <script type="text/javascript" src="../../src/js/Widget.js"></script>
+    <script type="text/javascript" src="../../node_modules/jasmine-ajax/lib/mock-ajax.js"></script>
+    <title></title>
+
+</head>
+<body>
+
+<script>
+
+describe("A suite", function() {
+  it("contains spec with an expectation", function() {
+    expect(true).toBe(true);
+  });
+});
+
+describe("Application initialisation", function() {
+  it("Method init returns true", function() {
+  	const result = myApp.init();
+    expect(result).toBe(true);
+  });
+});
+
+describe("TemplateModule.js", function () {
+    it('does not return undefined', function () {
+        expect(templateModule).not.toBeUndefined()
+    });
+
+    it('has a publicly available init method', function () {
+        expect(templateModule.init()).toBeDefined()
+    });
+
+    it('contains attribute _configMap that is unavailable', function () {
+        expect(templateModule._configMap).not.toBeDefined()
+    });
+});
+
+describe("SPA", function () {
+    it('has no undefined global variable', function () {
+        expect(spa).not.toBeUndefined()
+    });
+
+    it('has a publicly available init method', function () {
+        expect(spa.init()).not.toBeUndefined()
+    });
+});
+
+describe("Data", function () {
+    it('is available as attribute via SPA', function () {
+        expect(spa.data).toBeDefined()
+    });
+
+    it('has a publicly available init method', function () {
+        expect(spa.data.init()).not.toBeUndefined()
+    });
+
+    describe("Parameter environment", function () {
+        it('should have a parameter environment', function () {
+            spa.data.init();
+            expect(spa.data.configMap()).toBeDefined()
+        });
+
+        it('should be "development" by default at initialization', function () {
+            spa.data.init();
+            expect(spa.data.configMap().environment).toBe("development");
+        });
+
+        it('should be something else when entering a parameter initialization', function () {
+            spa.data.init("something else");
+            expect(spa.data.configMap().environment).toBe("something else");
+        });
+    });
+
+    describe("Parameter endpoint", function () {
+        it('should be api/Spel when the environment is production', function () {
+            spa.data.init("production");
+            expect(spa.data.configMap().endpoints[0]).toBe("api/Spel")
+        });
+    });
+
+    describe("Method getSpellen", function () {
+        // describe("when it is not mocked", function () {
+        //     beforeEach(function (done) {
+        //         spa.data.init("production");
+        //         spa.data.getSpellen(function (data) {
+        //             done()
+        //         },function () {
+        //             fail()
+        //         });
+        //     });
+        //
+        //     it('should return items from the Chuck API', function () {
+        //         expect(true).toBe(true)
+        //     });
+        // });
+
+        describe("when it is mocked", function () {
+            beforeEach(function () {
+                jasmine.Ajax.install();
+            });
+
+            afterEach(function () {
+                jasmine.Ajax.uninstall();
+            });
+
+            it('should return items from the API', function () {
+                spa.data.init("production");
+                spa.data.getSpellen();
+                let request = jasmine.Ajax.requests.mostRecent();
+                request.respondWith({status: 'success', responseText: 'Success'});
+                expect(request.responseText).toBe("Success")
+            });
+
+            it('should throw display an error when the API cannot be called', function () {
+                spa.data.init("production");
+                spa.data.getSpellen();
+                let request = jasmine.Ajax.requests.mostRecent();
+                request.respondWith({status: 'error', responseText: 'Error'});
+                // expect()
+                expect(request.responseText).toBe("Error")
+            });
+        })
+    })
+});
+
+describe("Model", function () {
+    it('is available as attribute via SPA', function () {
+        expect(spa.model).toBeDefined()
+    });
+    it('has a publicly available init method', function () {
+        expect(spa.model.init()).not.toBeUndefined()
+    });
+});
+
+describe("Reversi", function () {
+    it('is available as attribute via SPA', function () {
+        expect(spa.reversi).toBeDefined()
+    });
+    it('has a publicly available init method', function () {
+        expect(spa.reversi.init()).not.toBeUndefined()
+    });
+});
+
+// describe("Widget", function () {
+//     it('can be instantiated', function () {
+//         expect(widget).toBeDefined()
+//     });
+//     it('can be showed by calling a function', function () {
+//         widget.showMessage("test", "test", "green");
+//         expect(document.getElementsByClassName("widget").item(0)).toBeDefined();
+//         widget.hideMessage()
+//     });
+//     it('should have a closing button', function () {
+//         widget.showMessage("test", "test", "green");
+//         expect(document.getElementById("crossButton")).toBeDefined();
+//         widget.hideMessage()
+//     });
+//     it('should change its color to green at a positive message', function () {
+//         widget.showMessage("test", "test", "green");
+//         expect(document.getElementsByClassName("widget").item(0).id).toBe("okWidget");
+//         widget.hideMessage()
+//     });
+//     it('should change its color to red at a negative message', function () {
+//         widget.showMessage("test", "test", "red");
+//         expect(document.getElementsByClassName("widget").item(0).id).toBe("errorWidget");
+//         widget.hideMessage()
+//     });
+// })
+//     describe("Promise",function () {
+//         it('should succeed', function () {
+//             let promise = new Promise(function (resolve, reject) {
+//                 if (true) {
+//                     resolve("werkt")
+//                 } else {
+//                     resolve("werkt niet")
+//                 }
+//             });
+//
+//             promise.then(function () {
+//                 expect(true).toBe(true)
+//             }).catch(function () {
+//                 expect(true).toBe(false)
+//             })
+//         });
+//     })
+
+</script>
+</body>
+</html>

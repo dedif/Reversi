@@ -1,0 +1,39 @@
+﻿@page
+@model GameModel
+@{
+    ViewData["Title"] = "Game";
+}
+
+<h1>Game</h1>
+
+<p>
+    <a asp-page="Create">Maak nieuw spel</a>
+</p>
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.AvailableGames[0].Description)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.AvailableGames[0].BlackPlayer)
+        </th>
+        <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model.AvailableGames) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.BlackPlayer)
+            </td>
+            <td>
+                <a asp-page="./Game" asp-route-id="@item.Id" asp-page-handler="join">Deelnemen aan spel</a> |
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>

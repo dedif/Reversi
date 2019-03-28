@@ -1,0 +1,88 @@
+.widget, #okWidget, #errorWidget {
+  position: fixed;
+  top: 30%;
+  left: 30%;
+  right: 30%;
+  min-height: 100px;
+  border-radius: 3px;
+  -webkit-animation: fadeIn ease 1s;
+  animation: fadeIn ease 1s; }
+  .widget h1, #okWidget h1, #errorWidget h1 {
+    display: inline;
+    font-size: 5vw;
+    color: black; }
+
+@-webkit-keyframes fadeIn {
+  0% {
+    left: 0;
+    right: 60%;
+    opacity: 0; } }
+
+@keyframes fadeIn {
+  0% {
+    left: 0;
+    right: 60%;
+    opacity: 0; } }
+
+#okWidget {
+  background-color: green; }
+
+#errorWidget {
+  background-color: red; }
+
+@media only screen and (max-width: 768px) {
+  #widgetImage {
+    display: none; } }
+
+#widgetImage {
+  font-size: 70px;
+  margin-right: 100px; }
+
+#container {
+  color: gray;
+  display: inline-block; }
+
+#crossButton {
+  font-size: 2em;
+  float: right;
+  display: block;
+  margin: 10px; }
+
+.widget.onDeletion, .onDeletion#okWidget, .onDeletion#errorWidget {
+  visibility: hidden;
+  -webkit-animation: onDel ease 1s;
+  animation: onDel ease 1s; }
+
+@-webkit-keyframes onDel {
+  0% {
+    opacity: 100%;
+    visibility: visible; }
+  100% {
+    opacity: 0;
+    visibility: hidden; } }
+
+@keyframes onDel {
+  0% {
+    opacity: 100%;
+    visibility: visible; }
+  100% {
+    opacity: 0;
+    visibility: hidden; } }
+
+#crossButton.shakingButton {
+  -webkit-animation: shake ease 100ms;
+  animation: shake ease 100ms;
+  -webkit-animation-iteration-count: 4;
+  animation-iteration-count: 4; }
+
+@-webkit-keyframes shake {
+  25% {
+    margin-right: 15px; }
+  75% {
+    margin-right: 5; } }
+
+@keyframes shake {
+  25% {
+    margin-right: 15px; }
+  75% {
+    margin-right: 5; } }

@@ -1,0 +1,85 @@
+.widget {
+  position: fixed;
+  top: 30%;
+  left: 30%;
+  right: 30%;
+  min-height: 100px;
+  h1 {
+    display: inline;
+    font-size: 5vw;
+    color: black;
+  }
+  border-radius: 3px;
+  animation: fadeIn ease 1s;
+}
+
+@keyframes fadeIn {
+  0% {
+    left: 0;
+    right: 60%;
+    opacity: 0;
+  }
+}
+
+#okWidget {
+  @extend .widget;
+  background-color: green;
+}
+
+#errorWidget {
+  @extend .widget;
+  background-color: red;
+}
+
+@media only screen and (max-width: 768px) {
+  #widgetImage {
+    display: none;
+  }
+}
+#widgetImage {
+  font-size: 70px;
+  margin-right: 100px;
+
+}
+
+#container {
+  color: gray;
+  display: inline-block;
+}
+
+#crossButton {
+  font-size: 2em;
+  float: right;
+  display: block;
+  margin: 10px;
+}
+
+.widget.onDeletion {
+  visibility: hidden;
+  animation: onDel ease 1s;
+}
+
+@keyframes onDel {
+  0% {
+    opacity: 100%;
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+#crossButton.shakingButton {
+  animation: shake ease 100ms;
+  animation-iteration-count: 4;
+}
+
+@keyframes shake {
+  25% {
+    margin-right: 15px;
+  }
+  75% {
+    margin-right: 5px;
+  }
+}
