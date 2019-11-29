@@ -1,205 +1,246 @@
 <html lang="en">
 <head>
-<link rel="shortcut icon" type="image/png" href="jasmine/lib/jasmine/jasmine_favicon.png">
-<link rel="stylesheet" type="text/css" href="jasmine/lib/jasmine/jasmine.css">
+    <title>Tests</title>
+
+    <link rel="shortcut icon" type="image/png" href="jasmine/lib/jasmine/jasmine_favicon.png">
+    <link rel="stylesheet" type="text/css" href="jasmine/lib/jasmine/jasmine.css">
     <link rel="stylesheet" type="text/css" href="../../src/css/widget.css">
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.2/css/all.css" integrity="sha384-fnmOCqbTlWIlj8LyTjo7mOUStjsKC4pOpQbqyi7RrhN7udi9RwhKkMHpvLbHG9Sr" crossorigin="anonymous">
 
     <script type="text/javascript" src="jasmine/lib/jasmine/jasmine.js"></script>
-<script type="text/javascript" src="jasmine/lib/jasmine/jasmine-html.js"></script>
-<script type="text/javascript" src="jasmine/lib/jasmine/boot.js"></script>
-<script type="text/javascript" src="app.js"></script>
-<script type="text/javascript" src="../../node_modules/jquery/dist/jquery.js"></script>
-<script type="text/javascript" src="../../src/js/TemplateModule.js"></script>
-<script type="text/javascript" src="../../src/js/SPA.js"></script>
-<script type="text/javascript" src="../../src/js/Data.js"></script>
-<script type="text/javascript" src="../../src/js/Model.js"></script>
-<script type="text/javascript" src="../../src/js/Reversi.js"></script>
+    <script type="text/javascript" src="jasmine/lib/jasmine/jasmine-html.js"></script>
+    <script type="text/javascript" src="jasmine/lib/jasmine/boot.js"></script>
+    <script type="text/javascript" src="app.js"></script>
+    <!-- ReSharper disable once Html.PathError -->
+    <script type="text/javascript" src="../../node_modules/jquery/dist/jquery.js"></script>
+    <script type="text/javascript" src="../../src/js/TemplateModule.js"></script>
+    <script type="text/javascript" src="../../src/js/SPA.js"></script>
+    <script type="text/javascript" src="../../src/js/Data.js"></script>
+    <script type="text/javascript" src="../../src/js/Model.js"></script>
+    <script type="text/javascript" src="../../src/js/Reversi.js"></script>
     <script type="text/javascript" src="../../src/js/Widget.js"></script>
+    <!-- ReSharper disable once Html.PathError -->
     <script type="text/javascript" src="../../node_modules/jasmine-ajax/lib/mock-ajax.js"></script>
-    <title></title>
 
 </head>
 <body>
 
-<script>
+    <script>
 
-describe("A suite", function() {
-  it("contains spec with an expectation", function() {
-    expect(true).toBe(true);
-  });
-});
-
-describe("Application initialisation", function() {
-  it("Method init returns true", function() {
-  	const result = myApp.init();
-    expect(result).toBe(true);
-  });
-});
-
-describe("TemplateModule.js", function () {
-    it('does not return undefined', function () {
-        expect(templateModule).not.toBeUndefined()
-    });
-
-    it('has a publicly available init method', function () {
-        expect(templateModule.init()).toBeDefined()
-    });
-
-    it('contains attribute _configMap that is unavailable', function () {
-        expect(templateModule._configMap).not.toBeDefined()
-    });
-});
-
-describe("SPA", function () {
-    it('has no undefined global variable', function () {
-        expect(spa).not.toBeUndefined()
-    });
-
-    it('has a publicly available init method', function () {
-        expect(spa.init()).not.toBeUndefined()
-    });
-});
-
-describe("Data", function () {
-    it('is available as attribute via SPA', function () {
-        expect(spa.data).toBeDefined()
-    });
-
-    it('has a publicly available init method', function () {
-        expect(spa.data.init()).not.toBeUndefined()
-    });
-
-    describe("Parameter environment", function () {
-        it('should have a parameter environment', function () {
-            spa.data.init();
-            expect(spa.data.configMap()).toBeDefined()
+        describe("A suite", function () {
+            it("contains spec with an expectation", function () {
+// ReSharper disable once PossiblyUnassignedProperty
+                expect(true).toBe(true);
+            });
         });
 
-        it('should be "development" by default at initialization', function () {
-            spa.data.init();
-            expect(spa.data.configMap().environment).toBe("development");
+        describe("Application initialisation", function () {
+            it("Method init returns true", function () {
+                const result = myApp.init();
+// ReSharper disable once PossiblyUnassignedProperty
+                expect(result).toBe(true);
+            });
         });
 
-        it('should be something else when entering a parameter initialization', function () {
-            spa.data.init("something else");
-            expect(spa.data.configMap().environment).toBe("something else");
+        describe("TemplateModule.js", function () {
+            it('does not return undefined', function () {
+// ReSharper disable once PossiblyUnassignedProperty
+                expect(templateModule).not.toBeUndefined();
+            });
+
+            it('has a publicly available init method', function () {
+// ReSharper disable once PossiblyUnassignedProperty
+                expect(templateModule.init()).toBeDefined();
+            });
+
+            it('contains attribute _configMap that is unavailable and thus private', function () {
+// ReSharper disable once PossiblyUnassignedProperty
+                expect(templateModule._configMap).not.toBeDefined();
+            });
         });
-    });
 
-    describe("Parameter endpoint", function () {
-        it('should be api/Spel when the environment is production', function () {
-            spa.data.init("production");
-            expect(spa.data.configMap().endpoints[0]).toBe("api/Spel")
+        describe("SPA", function () {
+            it('is a global variable that is not undefined', function () {
+// ReSharper disable once PossiblyUnassignedProperty
+                expect(spa).not.toBeUndefined();
+            });
+
+            it('has a publicly available init method', function () {
+// ReSharper disable once PossiblyUnassignedProperty
+                expect(spa.init()).not.toBeUndefined();
+            });
         });
-    });
 
-    describe("Method getSpellen", function () {
-        // describe("when it is not mocked", function () {
-        //     beforeEach(function (done) {
-        //         spa.data.init("production");
-        //         spa.data.getSpellen(function (data) {
-        //             done()
-        //         },function () {
-        //             fail()
-        //         });
-        //     });
-        //
-        //     it('should return items from the Chuck API', function () {
-        //         expect(true).toBe(true)
-        //     });
-        // });
-
-        describe("when it is mocked", function () {
-            beforeEach(function () {
-                jasmine.Ajax.install();
+        describe("Data", function () {
+            it('is available as attribute via SPA', function () {
+// ReSharper disable once PossiblyUnassignedProperty
+                expect(spa.data).toBeDefined();
             });
 
-            afterEach(function () {
-                jasmine.Ajax.uninstall();
+            it('has a publicly available init method', function () {
+// ReSharper disable once PossiblyUnassignedProperty
+                expect(spa.data.init()).not.toBeUndefined();
             });
 
-            it('should return items from the API', function () {
-                spa.data.init("production");
-                spa.data.getSpellen();
-                let request = jasmine.Ajax.requests.mostRecent();
-                request.respondWith({status: 'success', responseText: 'Success'});
-                expect(request.responseText).toBe("Success")
+            describe("Parameter environment", function () {
+                it('should have a parameter environment', function () {
+                    spa.data.init();
+// ReSharper disable once PossiblyUnassignedProperty
+                    expect(spa.data.configMap()).toBeDefined();
+                });
+
+                it('should be "development" by default at initialization', function () {
+                    spa.data.init();
+// ReSharper disable once PossiblyUnassignedProperty
+                    expect(spa.data.configMap().environment).toBe("development");
+                });
+
+                it('should be something else when entering a parameter initialization', function () {
+                    spa.data.init("something else");
+// ReSharper disable once PossiblyUnassignedProperty
+                    expect(spa.data.configMap().environment).toBe("something else");
+                });
             });
 
-            it('should throw display an error when the API cannot be called', function () {
-                spa.data.init("production");
-                spa.data.getSpellen();
-                let request = jasmine.Ajax.requests.mostRecent();
-                request.respondWith({status: 'error', responseText: 'Error'});
-                // expect()
-                expect(request.responseText).toBe("Error")
+            describe("Parameter endpoint", function () {
+                it('should be api/Spel when the environment is production', function () {
+                    spa.data.init("production");
+// ReSharper disable once PossiblyUnassignedProperty
+                    expect(spa.data.configMap().endpoints.game).toBe("https://localhost:44301/api/game");
+                });
             });
-        })
-    })
-});
 
-describe("Model", function () {
-    it('is available as attribute via SPA', function () {
-        expect(spa.model).toBeDefined()
-    });
-    it('has a publicly available init method', function () {
-        expect(spa.model.init()).not.toBeUndefined()
-    });
-});
+            describe("Method getSpellen",
+                function () {
+                    //                    describe("when it is not mocked",
+                    //                        function() {
+                    //                            beforeEach(function(done) {
+                    //                                spa.data.init("production");
+                    //                                spa.data.getSpellen(function(data) {
+                    //                                        done();
+                    //                                    },
+                    //                                    function() {
+                    //                                        fail();
+                    //                                    });
+                    //                            });
+                    //
+                    //                            it('should return items from the Chuck API',
+                    //                                function() {
+                    //                                    expect(true).toBe(true);
+                    //                                });
+                    //                        });
 
-describe("Reversi", function () {
-    it('is available as attribute via SPA', function () {
-        expect(spa.reversi).toBeDefined()
-    });
-    it('has a publicly available init method', function () {
-        expect(spa.reversi.init()).not.toBeUndefined()
-    });
-});
+                    describe("when it is mocked",
+                        function () {
+                            beforeEach(function () {
+// ReSharper disable once PossiblyUnassignedProperty
+                                jasmine.Ajax.install();
+                            });
 
-// describe("Widget", function () {
-//     it('can be instantiated', function () {
-//         expect(widget).toBeDefined()
-//     });
-//     it('can be showed by calling a function', function () {
-//         widget.showMessage("test", "test", "green");
-//         expect(document.getElementsByClassName("widget").item(0)).toBeDefined();
-//         widget.hideMessage()
-//     });
-//     it('should have a closing button', function () {
-//         widget.showMessage("test", "test", "green");
-//         expect(document.getElementById("crossButton")).toBeDefined();
-//         widget.hideMessage()
-//     });
-//     it('should change its color to green at a positive message', function () {
-//         widget.showMessage("test", "test", "green");
-//         expect(document.getElementsByClassName("widget").item(0).id).toBe("okWidget");
-//         widget.hideMessage()
-//     });
-//     it('should change its color to red at a negative message', function () {
-//         widget.showMessage("test", "test", "red");
-//         expect(document.getElementsByClassName("widget").item(0).id).toBe("errorWidget");
-//         widget.hideMessage()
-//     });
-// })
-//     describe("Promise",function () {
-//         it('should succeed', function () {
-//             let promise = new Promise(function (resolve, reject) {
-//                 if (true) {
-//                     resolve("werkt")
-//                 } else {
-//                     resolve("werkt niet")
-//                 }
-//             });
-//
-//             promise.then(function () {
-//                 expect(true).toBe(true)
-//             }).catch(function () {
-//                 expect(true).toBe(false)
-//             })
-//         });
-//     })
+                            afterEach(function () {
+// ReSharper disable once PossiblyUnassignedProperty
+                                jasmine.Ajax.uninstall();
+                            });
 
-</script>
+                            it('should return items from the API',
+                                function () {
+                                    spa.data.init("production");
+                                    spa.data.getSpellen();
+// ReSharper disable once PossiblyUnassignedProperty
+                                    const request = jasmine.Ajax
+// ReSharper disable once PossiblyUnassignedProperty
+                                        .requests.mostRecent();
+// ReSharper disable once PossiblyUnassignedProperty
+                                    request.respondWith({ status: 'success', responseText: 'Success' });
+// ReSharper disable once PossiblyUnassignedProperty
+                                    expect(request.responseText).toBe("Success");
+                                });
+
+                            it('should throw display an error when the API cannot be called',
+                                function () {
+                                    spa.data.init("production");
+                                    spa.data.getSpellen();
+// ReSharper disable once PossiblyUnassignedProperty
+                                    const request = jasmine.Ajax
+// ReSharper disable once PossiblyUnassignedProperty
+                                        .requests.mostRecent();
+// ReSharper disable once PossiblyUnassignedProperty
+                                    request.respondWith({ status: 'error', responseText: 'Error' });
+// ReSharper disable once PossiblyUnassignedProperty
+                                    expect(request.responseText).toBe("Error");
+                                });
+                        });
+                });
+        });
+
+        describe("Model", function () {
+            it('is available as attribute via SPA', function () {
+// ReSharper disable once PossiblyUnassignedProperty
+                expect(spa.model).toBeDefined();
+            });
+            it('has a publicly available init method', function () {
+// ReSharper disable once PossiblyUnassignedProperty
+                expect(spa.model.init()).not.toBeUndefined();
+            });
+        });
+
+        describe("Reversi", function () {
+            it('is available as attribute via SPA', function () {
+// ReSharper disable once PossiblyUnassignedProperty
+                expect(spa.reversi).toBeDefined();
+            });
+            it('has a publicly available init method', function () {
+// ReSharper disable once PossiblyUnassignedProperty
+                expect(spa.reversi.init()).not.toBeUndefined();
+            });
+        });
+
+        describe("Widget",
+            function () {
+                it('can be instantiated',
+                    function () {
+                        const widget = new Widget();
+// ReSharper disable once PossiblyUnassignedProperty
+                        expect(widget).toBeDefined();
+                    });
+                it('can be showed by calling a function',
+                    function () {
+                        const widget = new Widget();
+                        widget.showMessage("test", "test", "green");
+                        expect(document.getElementsByClassName("widget").item(0)).toBeDefined();
+                        widget.hideMessage();
+                    });
+                it('should have a closing button',
+                    function () {
+                        const widget = new Widget();
+                        widget.showMessage("test", "test", "green");
+                        expect(document.getElementById("crossButton")).toBeDefined();
+                        widget.hideMessage();
+                    });
+                it('should change its color to green at a positive message',
+                    function () {
+                        const widget = new Widget();
+                        widget.showMessage("test", "test", "green");
+                        expect(document.getElementsByClassName("widget").item(0).id).toBe("okWidget");
+                        widget.hideMessage();
+                    });
+                it('should change its color to red at a negative message',
+                    function () {
+                        const widget = new Widget();
+                        widget.showMessage("test", "test", "red");
+                        expect(document.getElementsByClassName("widget").item(0).id).toBe("errorWidget");
+                        widget.hideMessage();
+                    });
+                it('stores the last 10 messages into localstorage',
+                    function () {
+                        const widget = new Widget();
+                        for (let i = 0; i < 10; i++) {
+                            widget.showMessage("test", "test", "green");
+                            widget.hideMessage();
+                        }
+                        expect(JSON.parse(localStorage.widget).length).toBe(10);
+                    });
+            });
+    </script>
 </body>
 </html>

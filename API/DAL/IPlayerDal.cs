@@ -52,5 +52,7 @@ namespace API.DAL
         void Logout(HttpContext httpContext);
 
         IEnumerable<Claim> GetUserClaims(Player player);
+
+        Player GetUserFromClaims(HttpContext httpContext);
     }
 }

@@ -1,7 +1,9 @@
 spa.reversi = (function ($) {
-    let _configMap;
+    let configMap;
+    let widget;
 
     function init() {
+        widget = new Widget();
         return true;
     }
 

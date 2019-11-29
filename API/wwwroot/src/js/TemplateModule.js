@@ -1,5 +1,5 @@
 let templateModule = (function ($) {
-    let _configMap;
+    let configMap;
 
     function init() {
         return true;

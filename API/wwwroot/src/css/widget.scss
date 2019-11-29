@@ -11,6 +11,7 @@
   }
   border-radius: 3px;
   animation: fadeIn ease 1s;
+  padding: 10px;
 }
 
 @keyframes fadeIn {
@@ -51,7 +52,14 @@
   font-size: 2em;
   float: right;
   display: block;
-  margin: 10px;
+}
+
+#containerForButtons {
+    position: relative;
+}
+
+#containerForButtons button {
+    float: right;
 }
 
 .widget.onDeletion {

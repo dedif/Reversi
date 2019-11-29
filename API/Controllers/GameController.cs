@@ -2,7 +2,6 @@
 using System.Linq;
 using API.DAL;
 using API.Models;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -22,17 +21,26 @@ namespace API.Controllers
         /// </summary>
         private IGameDal _gameDal;
 
+        private IPlayerDal _playerDal;
+        private IPlayerGameDal _playerGameDal;
+
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="gameDal">Data access layer for games. Parsed via dependency injection.</param>
-        public GameController(IGameDal gameDal) => _gameDal = gameDal;
+        /// <param name="playerDal"></param>
+        public GameController(IGameDal gameDal, IPlayerDal playerDal, IPlayerGameDal playerGameDal)
+        {
+            _gameDal = gameDal;
+            _playerDal = playerDal;
+            _playerGameDal = playerGameDal;
+        }
 
         /// <summary>
         /// Method called upon HTTP GET api/game/games
         /// </summary>
         /// <returns>All games that can currently be played</returns>
-        [HttpGet]
+        [HttpGet("games")]
         public ActionResult<IEnumerable<Game>> GetAvailableGames() => _gameDal.GetAvailableGames().ToList();
 
         /// <summary>
@@ -45,16 +53,19 @@ namespace API.Controllers
         public ActionResult<Game> GetGame(int id) => _gameDal.GetGame(id);
 
         /// <summary>
-        /// Method called upon POST api/game
+        /// Method called upon POST api/game/create
         /// Create a new game
         /// </summary>
-        /// <param name="blackPlayer">
-        /// The black player begins.
-        /// This player is also the player that sent the request to create a new game.
-        /// </param>
+        /// <param name="description">Description of the game</param>
         /// <returns>Return true if the method succeeded</returns>
-        [HttpPost]
-        public ActionResult<bool> CreateGame([FromBody] Player blackPlayer) =>
-            _gameDal.CreateGame(blackPlayer, "x");
+        [HttpPost("create")]
+        public ActionResult<bool> CreateGame([FromBody] string description) =>
+            _gameDal.CreateGame(_playerDal.GetUserFromClaims(HttpContext), description);
+
+        [HttpPost("join")]
+        public ActionResult<bool> JoinGame([FromBody] int gameId)
+        {
+            return _playerGameDal.JoinGame(_playerDal.GetUserFromClaims(HttpContext), gameId);
+        }
     }
 }

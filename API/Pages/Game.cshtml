@@ -7,7 +7,7 @@
 <h1>Game</h1>
 
 <p>
-    <a asp-page="Create">Maak nieuw spel</a>
+    <a asp-page="CreateGame">Maak nieuw spel</a>
 </p>
 <table class="table">
     <thead>
@@ -28,10 +28,10 @@
                 @Html.DisplayFor(modelItem => item.Description)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.BlackPlayer)
+                @Html.DisplayFor(modelItem => item.BlackPlayer.Avatar)
             </td>
             <td>
-                <a asp-page="./Game" asp-route-id="@item.Id" asp-page-handler="join">Deelnemen aan spel</a> |
+                <a asp-page="./Game" asp-route-id="@item.Id" asp-page-handler="join">Deelnemen aan spel</a>
             </td>
         </tr>
     }

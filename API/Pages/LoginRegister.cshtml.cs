@@ -95,7 +95,10 @@ namespace API.Pages
             else
             {
                 Console.WriteLine("Ingelogd");
-                return RedirectToPage("./Game");
+#if DEBUG
+                return Redirect("localhost:3000/index.html");
+#endif
+                return Redirect("index.html");
             }
         }
     }

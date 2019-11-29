@@ -1,0 +1,1 @@
+﻿browser-sync start --proxy http://localhost:5000/ --files 'wwwroot/src/css/*, wwwroot/src/js/*, wwwroot/index.html, browsersync-update.txt'

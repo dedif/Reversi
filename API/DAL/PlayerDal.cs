@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
+using System.Linq;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -19,6 +20,33 @@ namespace API.DAL
     /// </summary>
     public class PlayerDal : IPlayerDal
     {
+        /// <summary>
+        /// Process salt bytes to a database processable salt data string
+        /// </summary>
+        /// <param name="byteArray">The original salt bytes that the application can validate against</param>
+        /// <returns>The object that goes to the SQL Data Reader salt array item</returns>
+        public string ByteArrayToString(byte[] byteArray) =>
+            //new string(byteArray.Select(b => (char) b).ToArray());
+            BitConverter.ToString(byteArray);
+
+        /// <summary>
+        /// Process the raw VARCHAR(255) salt data to the original salt bytes
+        /// </summary>
+        /// <param name="rawDbData">The object that comes from the SQL Data Reader salt array item</param>
+        /// <returns>The original salt bytes that the application can validate against</returns>
+        //public byte[] StringToByteArray(string rawDbData) => rawDbData.Select(c => (byte)c).ToArray();
+        public byte[] StringToByteArray(string rawDbData)
+        {
+            var strArray = rawDbData.Split('-');
+            var byteArray = new byte[strArray.Length];
+            for (var i = 0; i < strArray.Length; i++)
+            {
+                byteArray[i] = Convert.ToByte(strArray[i], 16);
+            }
+
+            return byteArray;
+        }
+
         /// <inheritdoc />
         public bool AddPlayer(Player player)
         {
@@ -36,7 +64,7 @@ namespace API.DAL
                 sqlCommand.Parameters.AddWithValue("@Avatar", player.Avatar);
                 sqlCommand.Parameters.AddWithValue("@EmailAddress", player.EmailAddress);
                 sqlCommand.Parameters.AddWithValue("@PassPhrase", player.PassPhrase);
-                sqlCommand.Parameters.AddWithValue("@Salt", BitConverter.ToString(player.Salt));
+                sqlCommand.Parameters.AddWithValue("@Salt", ByteArrayToString(player.Salt));
                 sqlCommand.Parameters.AddWithValue("@UserRole", player.UserRole);
 
                 sqlConnection.Open();
@@ -47,7 +75,8 @@ namespace API.DAL
         }
 
         /// <inheritdoc />
-        public async Task<Player> GetPlayer(HttpContext httpContext, string avatar, string emailAddress, string passPhrase)
+        public async Task<Player> GetPlayer(HttpContext httpContext, string avatar, string emailAddress,
+            string passPhrase)
         {
             // Look for the player with the given credentials, return null when there is none
             var player = FindPlayerInDatabase(avatar, emailAddress);
@@ -94,12 +123,24 @@ namespace API.DAL
             return claims;
         }
 
+        public Player GetUserFromClaims(HttpContext httpContext)
+        {
+            var claims = httpContext.User.Claims;
+            var claimsArray = claims as Claim[] ?? claims.ToArray();
+            return new Player
+            {
+                Avatar = claimsArray.Where(c => c.Type.Equals(ClaimTypes.Name)).Select(c => c.Value).Single(),
+                EmailAddress = claimsArray.Where(c => c.Type.Equals(ClaimTypes.Email)).Select(c => c.Value).Single(),
+                UserRole = claimsArray.Where(c => c.Type.Equals(ClaimTypes.Role)).Select(c => c.Value).Single()
+            };
+        }
+
         /// <summary>
         /// Get the Claims Based Access Control role claims from this user
         /// </summary>
         /// <param name="player">The user to get role claims from</param>
         /// <returns>A list of user role claims: the avatar and the role</returns>
-        public IEnumerable<Claim> GetUserRoleClaims(Player player)
+        private IEnumerable<Claim> GetUserRoleClaims(Player player)
         {
             return new List<Claim>
             {
@@ -161,30 +202,13 @@ namespace API.DAL
                 player.Avatar = sqlDataReader["Avatar"].ToString();
                 player.EmailAddress = emailAddress;
                 player.PassPhrase = sqlDataReader["PassPhrase"].ToString();
-                player.Salt = RetrieveSaltFromRawDbData(sqlDataReader["Salt"].ToString());
+                player.Salt = StringToByteArray(sqlDataReader["Salt"].ToString());
                 player.CurrentlyPlayingGame = new Game(); // TODO: implement getting the game from db
                 player.UserRole = sqlDataReader["UserRole"].ToString();
                 sqlConnection.Close();
             }
 
             return player;
-        }
-
-        /// <summary>
-        /// Process the raw VARCHAR(255) salt data to the original salt bytes
-        /// </summary>
-        /// <param name="rawDbData">The object that comes from the SQL Data Reader salt array item</param>
-        /// <returns>The original salt bytes that the application can validate against</returns>
-        private byte[] RetrieveSaltFromRawDbData(string rawDbData)
-        {
-            var strArray = rawDbData.Split('-');
-            var byteArray = new byte[strArray.Length];
-            for (var i = 0; i < strArray.Length; i++)
-            {
-                byteArray[i] = Convert.ToByte(strArray[i], 16);
-            }
-
-            return byteArray;
         }
 
         /// <summary>
@@ -213,7 +237,7 @@ namespace API.DAL
                 player.Avatar = avatar;
                 player.EmailAddress = sqlDataReader["EmailAddress"].ToString();
                 player.PassPhrase = sqlDataReader["PassPhrase"].ToString();
-                player.Salt = RetrieveSaltFromRawDbData(sqlDataReader["Salt"].ToString());
+                player.Salt = StringToByteArray(sqlDataReader["Salt"].ToString());
                 player.CurrentlyPlayingGame = new Game(); // TODO: implement getting the game from db
                 player.UserRole = sqlDataReader["UserRole"].ToString();
                 sqlConnection.Close();
@@ -250,7 +274,7 @@ namespace API.DAL
         /// When logging in for an existing user, it will be taken from a salt database
         /// </param>
         /// <returns>The SCrypt hashed pass phrase</returns>
-        private string HashPassPhrase(string passPhrase, byte[] salt)
+        public string HashPassPhrase(string passPhrase, byte[] salt)
         {
             var password = Encoding.UTF8.GetBytes(passPhrase);
             var hashed = Convert.ToBase64String(ScryptUtil.Scrypt(

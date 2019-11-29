@@ -1,91 +1,105 @@
-let widget = (function() {
-    function showMessage(title, message, colour) {
-        let thereIsAWidget = document.getElementsByClassName("widget").length > 0;
+function Widget() {
+    function showMessage(title, message, colour, crossButtonFunction = function () {}, buttons = []) {
+        const thereIsAWidget = document.getElementsByClassName("widget").length > 0;
         if (thereIsAWidget) {
-            let oldWidget = document.getElementsByClassName("widget").item(0);
-            oldWidget.parentNode.removeChild(oldWidget)
+            const oldWidget = document.getElementsByClassName("widget").item(0);
+            oldWidget.parentNode.removeChild(oldWidget);
         }
         // let oldWidget =
         // document.getElementsByClassName("widget").item(0).parentNode.removeChild
-        let _widget = document.createElement("div");
-        let icon = document.createElement("span");
-        let containerForText = document.createElement("div");
-        let crossButton = document.createElement("div");
+        const widget = document.createElement("div");
+        const icon = document.createElement("span");
+        const containerForText = document.createElement("div");
+        const crossButton = document.createElement("div");
+        const containerForButtons = document.createElement("div");
 
-        _widget.className += "widget";
+        widget.className += "widget";
         if (colour === "green") {
-            _widget.id = "okWidget";
+            widget.id = "okWidget";
             icon.innerHTML = "<i class='fas fa-check'></i>";
         } else {
-            _widget.id = "errorWidget";
+            widget.id = "errorWidget";
             icon.innerHTML = "<i class='fas fa-exclamation'></i>";
         }
 
         icon.id = "widgetImage";
-        _widget.appendChild(icon);
+        widget.appendChild(icon);
 
-        let head = document.createElement("h1");
-        head.innerHTML = title;
+        const head = document.createElement("h1");
+        head.innerText = title;
         containerForText.appendChild(head);
 
         crossButton.id = "crossButton";
         crossButton.innerHTML = "<i class='fas fa-times-circle'></i>";
-        crossButton.onclick = function() {
-            hideMessage()
+        crossButton.onclick = function () {
+            hideMessage();
+            crossButtonFunction();
         };
         waitForClick(crossButton);
-        _widget.appendChild(crossButton);
+        widget.appendChild(crossButton);
 
         containerForText.innerHTML += "<br>";
         containerForText.innerHTML += message;
 
         containerForText.id = "container";
 
-        _widget.appendChild(containerForText);
+        widget.appendChild(containerForText);
 
-        document.body.appendChild(_widget);
+        containerForButtons.id = "containerForButtons";
+        buttons = buttons || [];
+        buttons.reverse();
+        buttons.forEach(function(buttonData) {
+            const buttonInContainer = document.createElement("button");
+            buttonInContainer.innerText = buttonData.name;
+            buttonInContainer.onclick = function() {
+                buttonData.function();
+                hideMessage();
+            }
+            containerForButtons.appendChild(buttonInContainer);
+        });
+        widget.appendChild(containerForButtons);
+
+        document.body.appendChild(widget);
     }
 
     function shake(crossButton) {
-        crossButton.classList.add("shakingButton")
+        crossButton.classList.add("shakingButton");
     }
 
     function waitForClick(crossButton) {
         new Promise((resolve) => {
             setTimeout(() => {
-                resolve()
-            },2000)
+                resolve();
+            },2000);
         }).then(() => {
-            shake(crossButton)
-        })
+            shake(crossButton);
+        });
     }
 
-    function _storeMessage(message) {
+    function storeMessage(message) {
         if (localStorage.widget) {
             let localStorageItems = JSON.parse(localStorage.widget);
             localStorageItems.push(message);
 
             if (localStorageItems.length > 10) {
-
+                localStorageItems = localStorageItems.slice(-10);
             }
             localStorage.widget = JSON.stringify(localStorageItems);
         } else {
-            let localStorageItems = [message];
-            alert("Hoi");
-            localStorage.setItem("widget", JSON.stringify((localStorageItems)))
-            // localStorageItems.widget = JSON.stringify(localStorageItems);
+            const localStorageItems = [message];
+            localStorage.setItem("widget", JSON.stringify((localStorageItems)));
         }
     }
 
     function hideMessage() {
-        let _widget = document.getElementsByClassName("widget").item(0);
-        _widget.classList.add("onDeletion");
+        const widget = document.getElementsByClassName("widget").item(0);
+        widget.classList.add("onDeletion");
         // _widget.parentNode.removeChild(_widget);
-        _storeMessage("Gesloten");
+        storeMessage("Gesloten");
     }
 
     return {
         showMessage: showMessage,
         hideMessage: hideMessage
-    }
-})();
+    };
+};

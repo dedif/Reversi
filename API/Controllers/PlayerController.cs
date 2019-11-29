@@ -1,7 +1,5 @@
-﻿using System.Threading.Tasks;
-using API.DAL;
+﻿using API.DAL;
 using API.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers
@@ -23,15 +21,13 @@ namespace API.Controllers
 
         public PlayerController(IPlayerDal playerDal) => _playerDal = playerDal;
 
-//        public ActionResult<Player> Get()
-//        {
-//            return new Player {Avatar = "Komt uit API"};
-//        }
+        // POST api/player/isLoggedIn
+        [HttpGet("isLoggedIn")]
+        public bool IsLoggedIn() => Request.Cookies.ContainsKey(".AspNetCore.Cookies");
 
-//        public ActionResult<Player> Get(string avatar, string emailAddress, string passPhrase)
-//        {
-//            return _playerDal.GetPlayer(avatar, emailAddress, passPhrase);
-//        }
+        // POST api/player/getLoggedInPlayer
+        [HttpGet("getLoggedInPlayer")]
+        public ActionResult<Player> GetLoggedInPlayer() => _playerDal.GetUserFromClaims(HttpContext);
 
         // POST api/player/login
         [HttpPost("login")]
@@ -51,6 +47,6 @@ namespace API.Controllers
         }
 
         [HttpPost("logout")]
-        public void Logout(HttpContext httpContext) => _playerDal.Logout(httpContext);
+        public void Logout() => _playerDal.Logout(HttpContext);
     }
 }
