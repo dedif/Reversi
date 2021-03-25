@@ -91,7 +91,8 @@ gulp.task("serve", function () {
     // ReSharper disable once StringLiteralTypo
     // ReSharper disable once StringLiteralTypo
     gulp.watch(rootDir + "src/css/**/*.scss", gulp.series("buildSCSS", "auto-prefix", "minify-css")).on("change", browserSync.reload);
-    gulp.watch(rootDir + "src/js/**/*.js", gulp.series("concat", "babel", "uglify")).on("change", browserSync.reload);
+    //gulp.watch(rootDir + "src/js/**/*.js", gulp.series("concat", "babel", "uglify")).on("change", browserSync.reload);
+    gulp.watch(rootDir + "src/js/**/*.js", gulp.series("concat")).on("change", browserSync.reload);
     // ReSharper disable once StringLiteralTypo
     gulp.watch("browsersync-update.txt").on("change", browserSync.reload);
 });

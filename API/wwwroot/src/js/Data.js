@@ -1,16 +1,20 @@
 spa.data = (function ($) {
-    let configMap;
+    let configMap = "x";
 
     function init(environment = "development") {
+        console.log("configMap wordt gemaakt");
         configMap = {
             environment: environment,
             endpoints: {
+                game: "https://localhost:44301/api/game",
+                player: "https://localhost:44301/api/player",
+                loginregister:"https://localhost:44301/loginregister"
             }
         };
         if (environment === "production") {
-            configMap.endpoints.game = "https://localhost:5001/api/game";
-            configMap.endpoints.player = "https://localhost:5001/api/player";
-            configMap.endpoints.loginregister = "https://localhost:5001/loginregister"
+            configMap.endpoints.game = "https://localhost:44301/api/game";
+            configMap.endpoints.player = "https://localhost:44301/api/player";
+            configMap.endpoints.loginregister = "https://localhost:44301/loginregister"
         }
         return true;
     }
@@ -137,9 +141,7 @@ spa.data = (function ($) {
 
     return {
         init: init,
-        configMap: function () {
-            return configMap;
-        },
+        configMap,
         getSpellen: getSpellen,
         logout: logout,
         userIsLoggedIn: userIsLoggedIn,

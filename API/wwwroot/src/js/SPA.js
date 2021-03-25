@@ -5,6 +5,7 @@
     function init(environment = "development") {
         widget = new Widget();
         spa.data.init(environment);
+        console.log(spa.data.configMap);
         spa.model.init();
         $("body").append("<h1>Welkom bij Reversi!</h1>");
         spa.data.userIsLoggedIn().then(result => {
