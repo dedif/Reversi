@@ -2,7 +2,7 @@
 
 ## Installation
 
-1. Install Chocolatey from https://chocolatey.org/install
+1. Install Chocolatey from <https://chocolatey.org/install>
 2. Install Microsoft Visual Studio Community Edition (at the time of writing: 2019 edition):
 
 **Windows command line**
@@ -30,3 +30,15 @@
 **Windows command line**
 
 ```npm config set msbuild_path "C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Current\Bin\MSBuild.exe"```
+
+8. Install Microsoft Visual Studio Code:
+
+**Windows command line**
+
+```choco install vscode```
+
+9. Within Microsoft Visual Studio Code, install the recommended Markdown linter (davidanson.vscode-markdownlint)
+
+10. If your PC allows its fairly high performance consumption, install Jetbrains ReSharper:
+
+```choco install resharper```
